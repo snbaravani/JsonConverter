@@ -1,7 +1,10 @@
 package com.au.avarni.converter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.URL;
@@ -20,12 +23,13 @@ public class CsvReader {
     private static int processedRows ;
 
     public static void readCsvs() throws IOException, CsvException {
-        URL fileUrl = CsvReader.class.getClassLoader().getResource("atlassian.csv"); //atlassian.csv,amazon.csv,microsoft.csv
+        URL fileUrl = CsvReader.class.getClassLoader().getResource("amazon.csv"); //atlassian.csv,amazon.csv,microsoft.csv
         try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
             List<String[]> data = reader.readAll();
             getFinYears(data.get(0));
             getDataByScope(data);
             scopesData = scopesData;
+            createJson();
         }
     }
 
@@ -39,51 +43,68 @@ public class CsvReader {
     }
 
     private static void getDataByScope(List<String[]> data) {
-        for (int i = 1; i < data.size(); i ++ ) {
-            String[] row = data.get(i);
-            for (int j = 0; j < row.length; j++) {
-                if (containsScope1(row[j])) {
-                    getScope1Data(data, i, "Scope 1");
-                    i = processedRows;
-                    continue;
-                } else if (containsScope2(row[j])) {
+            getScopeData(data,  "Scope 1");
+            getScopeData(data,  "Scope 2");
+            getScopeData(data,  "Scope 3");
 
-                } else {
-
-                }
-            }
-        }
     }
 
-    private static void getScope1Data(List<String[]> data, int currentRow, String scopeNumber) {
-        boolean scopeNum = false;
-        for (int i = currentRow; i < data.size(); i ++ ) {
+    private static void getScopeData(List<String[]> data, String scopeNumber) {
+        boolean scopeNum = false, scopeBracket = false;
+        for (int i = processedRows+1; i < data.size(); i ++ ) {
             String[] row = data.get(i);
-                if (row[0] != null && scopeList.contains(row[0]) && row[0] != scopeNumber) {
+            String val = row[0];
+            if(scopeNumber == "Scope 1" && (containsScope2(val) || containsScope3(val))){ // Another Scope so dont process
                     return;
-                } else if (containsScope1(row[0]) || scopeNum) {
+             } else if (scopeNumber == "Scope 2" && (containsScope1(val) || containsScope3(val))) {// Another Scope so dont process
+                     return;
+             } else if (scopeNumber == "Scope 3" && (containsScope1(val) || containsScope2(val))){// Another Scope so dont process
+                   return;
+             } else if(row[0].contains("("+scopeNumber+")") || scopeBracket){ // Amazon pattern, Ex: "Emissions from Purchased Electricity (Scope 2)
+                scopeBracket  = true;
+                Map<String, String> goals =  scopesData.get(scopeNumber);
+                if(goals == null){
+                    goals = new HashMap<>();
+                }
+                 String label = row[0];
+                 String value = row[2];
+                 if (label != null && value != null && label.length() > 2 && value.length() > 2) {
+                      goals.put(label, value);
+                      scopesData.put(scopeNumber, goals);
+                  }
+
+            } else if ( val != null && (scopeNum || val.contains(scopeNumber) || val.contains(scopeNumber.toUpperCase()) )) {//Microsoft pattern,  "Scope 1 Scope1-based² ","2,697,554 ","10000 ","3,557,518 ","4,102,445 ",
                     scopeNum = true;
                     Map<String, String> goals =  scopesData.get(scopeNumber);
                     if(goals == null){
                         goals = new HashMap<>();
                     }
-                     if(row[0].startsWith("Scope 1") && row[0].length() > 15){  // "Scope 1 Scope1-based² ","2,697,554 ","10000 ","3,557,518 ","4,102,445 ",
+                     if(row[0].startsWith(scopeNumber) && row[0].length() > 15){
                        String label =   row[0].replace(scopeNumber, ""); //Remove 'Scope x from the label
                        String value = row[2];
-                       goals.put(label,value);
+                       if(label != null && value != null && label.length() > 2 && value.length() > 2){
+                           goals.put(label,value);
+                           scopesData.put(scopeNumber,goals);
+                       }
 
-                     } else  if(!row[0].contains(scopeNumber.toUpperCase()) && !row[0].contains("("+scopeNumber+")")){ // Avoid the Scope heading and consider only lables or goals ex: Scope 1
-                             goals.put(row[0],row[2]);
+                     } else  if(!row[0].contains(scopeNumber.toUpperCase()) && !row[0].contains("("+scopeNumber+")")){ // Attlassian,"SCOPE 1 ","119.4 ","0.14% ","274.9 ","0.4% ",
+                           scopeNum = true;                                                                                                          // "Natural Gas ","117.8 ","0.13% ","186.8 ","0.2% ",
+                            goals.put(row[0],row[2]);
+                           scopesData.put(scopeNumber,goals);
 
-                     } else if(!row[0].contains("("+scopeNumber+")")){
+                     } else if(row[0].contains("("+scopeNumber+")")){ // Amazon pattern,
                          continue;
                      }
-                    scopesData.put(scopeNumber,goals);
-                    processedRows = i;
-
                 }
-
+                     processedRows = i;
             }
+
+
+    }
+
+    private static void createJson() throws JsonProcessingException {
+        String json = new ObjectMapper().writeValueAsString(scopesData);
+        System.out.println(json);
 
 
     }
