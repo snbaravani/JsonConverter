@@ -21,13 +21,12 @@ public class CsvReader {
     private static Double totalVal = 0.0;
 
     public static void readCsvs() throws IOException, CsvException {
-        URL fileUrl = CsvReader.class.getClassLoader().getResource("amazon.csv"); //atlassian.csv,amazon.csv,microsoft.csv
+        URL fileUrl = CsvReader.class.getClassLoader().getResource("atlassian.csv"); //atlassian.csv,amazon.csv,microsoft.csv
         try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
             List<String[]> data = reader.readAll();
             getFinYears(data.get(0));
             getDataByScope(data);
-            scopesData = scopesData;
-            createJson("amazon.json",scopesData);
+            createJson("atlassian.json",scopesData);
         }
     }
 
@@ -76,7 +75,7 @@ public class CsvReader {
 
                      } else  if(!row[0].contains(scopeNumber.toUpperCase()) && !row[0].contains("("+scopeNumber+")")){ // Attlassian,"SCOPE 1 ","119.4 ","0.14% ","274.9 ","0.4% ",
                            scopeNum = true;                                                                                                          // "Natural Gas ","117.8 ","0.13% ","186.8 ","0.2% ",
-                           createDataForAttlassianTemplate(scopeStar, row[0] , row[1]);
+                           createDataForAttlassianTemplate(scopeStar, row[0] , row[3]);
 
                      }
                 }
