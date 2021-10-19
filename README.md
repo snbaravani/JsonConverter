@@ -63,24 +63,39 @@ a JSON structure looking like this:
 }
 ```
 
-### Source data analysis
+### Source data assumptions
 
-The following are assumptions made based on the sample data sets available.
+Some sample JSON datasets are available under `src/main/resources`. The following are assumptions made based on
+the available samples.
 
-Tables are represented by strings. Each string starts with: `Table: Table_1\n\n,`, where `Table_1` can end with
-any number (not just 1). It's assumed that the number here refers either to the table number on a page, or as a way
-of linking multiple parts of a table together, if the table spans multiple pages.
+- Tables data can be found in a fixed location within each JSON structure at: `"status: { "tables": [] }`.
 
-New line characters `\n` are used to break up rows. Commas surrounded by spaces ` , ` are used to break up cells.
-Therefore, this structure closely resembles CSV.
+- Tables are represented by strings. Each string starts with: `Table: Table_1\n\n,`, where `Table_1` can end with
+  any number (not just 1). It's assumed that the number here refers either to the table number on a page, or as a way
+  of linking multiple parts of a table together, if the table spans multiple pages.
 
-### Transformation
+- New line characters `\n` are used to break up rows. Commas surrounded by spaces ` , ` are used to break up cells.
+  Therefore, this structure closely resembles CSV.
 
-To transform the data into the target JSON structure, the following needs to be done:
+- Values can be either strings or numbers. Strings will be used for column and row headings. Numbers will be present
+  in cells, and these could either be whole numbers, fractional numbers or percentages. They might represent a single
+  value or a total value of other cells in the table.
 
-1. Locate tables of importance as there will likely be tables in the data that don't relate to emissions figures
+### Transformation process
+
+> "Table of importance" mentioned below refers to any table data that should be factored in to the final JSON output.
+
+To transform the source data into the target JSON structure, the following needs to be done:
+
+1. Locate tables of importance as there will likely be tables in the data that don't relate to emissions figures.
+   - There may be one or more tables of importance
 2. Extract values data from each important table, ensuring scope and year are captured for each
-3. Perform some data cleansing, such as removing commas from large numbers and dropping irrelevant values 
-   or values that can't be parsed
-4. Aggregate and categorise all cleansed data by scope and year
-5. Convert the aggregated data into the target JSON structure
+3. Perform some data cleansing, such as removing commas from large numbers (`3,465,234` to `3465234`) and dropping
+   irrelevant values or values that can't be parsed
+5. Aggregate and categorise all cleansed data by scope and year
+6. Convert the aggregated data into the target JSON structure
+
+### Implementation Notes
+
+- Regular expressions have been heavily used to perform string pattern-matching, e.g. filtering out tables
+  of importance

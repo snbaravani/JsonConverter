@@ -13,11 +13,14 @@ public class TabularApp {
 
         System.out.println("Transforming " + filename);
 
+        // 1. Get a JsonObject from the specified JSON file
         JsonObject crawlerJSON = TabularFileReader.readJSONFile(filename);
 
+        // 2. Get a collection of tables that relate to emissions
         JsonArray emissionsTables = TabularTransformer.findEmissionsTables(crawlerJSON);
 
-        JsonObject targetJSON = TabularTransformer.transformTables(emissionsTables);
+        // 3. Extract, cleanse & aggregate data from emissions tables, formatting it into the target JSON
+        String targetJSON = TabularTransformer.transformEmissionsTables(emissionsTables);
 
         System.out.println(targetJSON);
     }
