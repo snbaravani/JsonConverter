@@ -21,13 +21,17 @@ public class CsvReader {
     private static Double totalVal = 0.0;
 
     public static void readCsvs() throws IOException, CsvException {
-        URL fileUrl = CsvReader.class.getClassLoader().getResource("atlassian.csv"); //atlassian.csv,amazon.csv,microsoft.csv
-        try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
-            List<String[]> data = reader.readAll();
-            getFinYears(data.get(0));
-            getDataByScope(data);
-            createJson("atlassian.json",scopesData);
+        String[] fileList = {"atlassian.csv","amazon.csv","microsoft.csv"};
+        for(int i = 0; i<fileList.length;i++){
+            URL fileUrl = CsvReader.class.getClassLoader().getResource(fileList[i]); //atlassian.csv,amazon.csv,microsoft.csv
+            try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
+                List<String[]> data = reader.readAll();
+                getFinYears(data.get(0));
+                getDataByScope(data);
+                createJson(fileUrl.getFile()+".json",scopesData);
+            }
         }
+
     }
 
     private static void getFinYears(String[] firstLine) {
@@ -99,6 +103,9 @@ public class CsvReader {
     }
     private static void createDataForMicrosoftTemplate(String scopeStar, String label, String value){
         Map<String, Double> goals =  scopesData.get(scopeStar);
+        if(goals == null){
+            goals = new TreeMap<>();
+        }
         double numericVal = Double.parseDouble(value);
         totalVal+= numericVal;
         goals.put(label,numericVal);
@@ -108,7 +115,10 @@ public class CsvReader {
 
     private static void createDataForAttlassianTemplate(String scopeStar, String label, String value){
         Map<String, Double> goals =  scopesData.get(scopeStar);
-        double numericVal = Double.parseDouble(value);
+        if(goals == null){
+            goals = new TreeMap<>();
+        }
+        double numericVal = Double.parseDouble(value.replace(",",""));
         totalVal+= numericVal;
         goals.put(label,numericVal);
         scopesData.put(scopeStar,goals);
