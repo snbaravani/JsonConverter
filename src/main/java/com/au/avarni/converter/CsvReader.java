@@ -23,12 +23,15 @@ public class CsvReader {
     public static void readCsvs() throws IOException, CsvException {
         String[] fileList = {"atlassian.csv","amazon.csv","microsoft.csv"};
         for(int i = 0; i<fileList.length;i++){
+            System.out.println(fileList[i]);
             URL fileUrl = CsvReader.class.getClassLoader().getResource(fileList[i]); //atlassian.csv,amazon.csv,microsoft.csv
+
             try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
                 List<String[]> data = reader.readAll();
                 getFinYears(data.get(0));
                 getDataByScope(data);
                 createJson(fileUrl.getFile()+".json",scopesData);
+                clearData();
             }
         }
 
@@ -93,7 +96,7 @@ public class CsvReader {
             goals = new TreeMap<>();
         }
         if (label != null && value != null && label.length() > 2 && value.length() > 2) {
-            double numericVal = Double.parseDouble(value);
+            double numericVal =  (value != null && value.contains(",")) ? Double.parseDouble(value.replaceAll(",","")) : Double.parseDouble(value);
             totalVal+= numericVal;
             goals.put(label, numericVal);
             goals.put("total", totalVal);
@@ -106,7 +109,7 @@ public class CsvReader {
         if(goals == null){
             goals = new TreeMap<>();
         }
-        double numericVal = Double.parseDouble(value);
+        double numericVal =  (value != null && value.contains(",")) ? Double.parseDouble(value.replaceAll(",","")) : Double.parseDouble(value);
         totalVal+= numericVal;
         goals.put(label,numericVal);
         scopesData.put(scopeStar,goals);
@@ -118,11 +121,16 @@ public class CsvReader {
         if(goals == null){
             goals = new TreeMap<>();
         }
-        double numericVal = Double.parseDouble(value.replace(",",""));
+        double numericVal = (value != null && value.contains(",")) ? Double.parseDouble(value.replaceAll(",","")) : Double.parseDouble(value);
         totalVal+= numericVal;
         goals.put(label,numericVal);
         scopesData.put(scopeStar,goals);
         goals.put("total", totalVal);
+    }
+
+    private static  void clearData(){
+        scopesData.clear();
+        processedRows = 1;
     }
 
 }
