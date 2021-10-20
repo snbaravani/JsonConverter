@@ -7,6 +7,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class TabularTransformer {
@@ -103,6 +104,7 @@ public class TabularTransformer {
                 String[] cells = row.split(", ");
 
                 String rowLabelCell = cells[0];
+                String rowLabel = TabularAppUtils.getCellLabel(rowLabelCell);
                 Integer rowScope = TabularAppUtils.getScopeNumber(rowLabelCell);
 
                 if (rowScope != null) {
@@ -114,23 +116,32 @@ public class TabularTransformer {
                     continue;
                 }
 
-                // TODO: Format `rowLabelCell` for use in JSON key (e.g., removing scope number)
-                // TODO: Separate the leftmost column value from the label cell
+                // TODO: Format `rowLabel` for use in JSON key (e.g., removing scope number)
 
-                // Loop over row cells from right to left, ignoring the first (leftmost) cell for now
-                for (Integer cellIndex = cells.length - 1; cellIndex > 0; cellIndex--) {
-                    Integer year = yearColumnIndexes.get(cellIndex);
-                    Float value = TabularAppUtils.cleanseFloat(cells[cellIndex]);
+                // Loop over each column based on the year heading, storing the value in each cell
+                for (Map.Entry<Integer, Integer> entry : yearColumnIndexes.entrySet()) {
+                    Integer colIndex = entry.getKey();
+                    Integer year = entry.getValue();
 
-                    if (year != null && value != null) {
-                        scopesMap.get("scope" + currentScope).setYearValue(year, rowLabelCell, value);
+                    String rawValue = cells[colIndex];
+                    Double numericValue = null;
+
+                    // Special parsing needed for the first value as the row label & value get combined
+                    if (colIndex == 0) {
+                        numericValue = TabularAppUtils.getCellValue(rawValue);
+                    } else {
+                        numericValue = TabularAppUtils.cleanseDouble(rawValue);
+                    }
+
+                    if (year != null && numericValue != null) {
+                        scopesMap.get("scope" + currentScope).setYearValue(year, rowLabel, numericValue);
                     }
                 }
             }
         });
 
         // Convert the map of scope objects into a map of maps for JSON serialization
-        HashMap<String, HashMap<Integer, HashMap<String, Float>>> jsonMap = new HashMap<>();
+        HashMap<String, HashMap<Integer, HashMap<String, Double>>> jsonMap = new HashMap<>();
         scopesMap.forEach((scopeName, scopeObject) -> {
             jsonMap.put(scopeName, scopeObject.getYearsMap());
         });

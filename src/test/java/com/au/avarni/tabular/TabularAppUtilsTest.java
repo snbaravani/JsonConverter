@@ -20,16 +20,16 @@ public class TabularAppUtilsTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    public void cleanseFloat_InvalidValue_ReturnsNull(String inputStr) {
-        Float actual = TabularAppUtils.cleanseFloat(inputStr);
+    public void cleanseDouble_InvalidValue_ReturnsNull(String inputStr) {
+        Double actual = TabularAppUtils.cleanseDouble(inputStr);
 
         assertNull(actual);
     }
 
     @Test
-    public void cleanseFloat_WithSpecialChars_ReturnsFloat() {
-        Float expected = 1234560.789f;
-        Float actual = TabularAppUtils.cleanseFloat(" 1,234,560. 789³ ");
+    public void cleanseDouble_WithSpecialChars_ReturnsDouble() {
+        Double expected = 1234560.789;
+        Double actual = TabularAppUtils.cleanseDouble(" 1,234,560. 789³ ");
 
         assertEquals(expected, actual);
     }
@@ -69,6 +69,46 @@ public class TabularAppUtilsTest {
     public void getScopeNumber_ValidScopeNumber_ReturnsNumber() {
         Integer expected = 3;
         Integer actual = TabularAppUtils.getScopeNumber("Test scope 3 test");
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"abc", "123 abc"})
+    public void getCellValue_InvalidContent_ReturnsNull(String inputStr) {
+        Double actual = TabularAppUtils.getCellValue(inputStr);
+
+        assertNull(actual);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            " 1234567.89 ",
+            " 1,234,567.89 ",
+            "abc 1,234,567.89",
+            "abc 1,234,567.89",
+            "999 1,234,567.89",
+    })
+    public void getCellValue_ValidContent_ReturnsNull(String inputStr) {
+        Double expected = 1234567.89;
+        Double actual = TabularAppUtils.getCellValue(inputStr);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getCellLabel_NoNumber_ReturnsWholeString() {
+        String expected = "123 abc";
+        String actual = TabularAppUtils.getCellLabel("123 abc");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getCellLabel_WithNumber_ReturnsLabel() {
+        String expected = "123 abc";
+        String actual = TabularAppUtils.getCellLabel(" 123 abc 1,234.56");
 
         assertEquals(expected, actual);
     }

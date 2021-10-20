@@ -19,6 +19,12 @@ public class TabularAppUtils {
     private static final Pattern scopePattern = Pattern.compile(scopeRegex, Pattern.CASE_INSENSITIVE);
 
     /**
+     * Regex to extract the numeric value from a cell, reading from the end of the string
+     */
+    private static final String cellValueRegex = "\\s+((\\d|\\.|,)+)\\s*$";
+    private static final Pattern cellValuePattern = Pattern.compile(cellValueRegex);
+
+    /**
      * Given a 4 digit year or FY** format, returns a 4 digit year integer.
      *
      * @param year Any one of: 2021, FY21
@@ -54,14 +60,14 @@ public class TabularAppUtils {
     }
 
     /**
-     * Returns a floating point number special chars & spaces removed, or null if the value can't be parsed.
+     * Returns a decimal number with special chars & spaces removed, or null if the value can't be parsed.
      *
      * @param numberStr A string of a number that might contain non-numeric characters
-     * @return A floating point number
+     * @return A decimal number
      */
-    public static Float cleanseFloat(String numberStr) {
+    public static Double cleanseDouble(String numberStr) {
         try {
-            return Float.valueOf(cleanseStringNumber(numberStr));
+            return Double.valueOf(cleanseStringNumber(numberStr));
         } catch (Exception e) {
             return null;
         }
@@ -91,10 +97,52 @@ public class TabularAppUtils {
                 return Integer.valueOf(scopeMatcher.group(1));
             }
         } catch (Exception e) {
-            System.err.println("Error whilst extracting scope number");
+            System.err.println("Error whilst extracting scope number from: \"" + label + "\"");
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    /**
+     * Returns the value of the cell content based on the final number appearing in the string.
+     *
+     * @param cell String cell content
+     * @return Numeric cell value or null if there's no valid value found
+     */
+    public static Double getCellValue(String cell) {
+        try {
+            Matcher scopeMatcher = cellValuePattern.matcher(cell);
+
+            if (scopeMatcher.find()) {
+                return cleanseDouble(scopeMatcher.group(1));
+            }
+        } catch (Exception e) {
+            System.err.println("Error whilst extracting cell value from: \"" + cell + "\"");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the label of the cell content based on the leading string, minus trailing number.
+     *
+     * @param cell String cell content
+     * @return Label from the start of the string or the whole string if no trailing number found
+     */
+    public static String getCellLabel(String cell) {
+        try {
+            Matcher scopeMatcher = cellValuePattern.matcher(cell);
+
+            if (scopeMatcher.find()) {
+                return cell.substring(0, scopeMatcher.start()).strip();
+            }
+        } catch (Exception e) {
+            System.err.println("Error whilst extracting cell value from: \"" + cell + "\"");
+            e.printStackTrace();
+        }
+
+        return cell;
     }
 }

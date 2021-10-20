@@ -24,12 +24,10 @@ public class ScopeObject {
      *
      * @return Map of year value maps
      */
-    public HashMap<Integer, HashMap<String, Float>> getYearsMap() {
-        HashMap<Integer, HashMap<String, Float>> yearsMap = new HashMap<>();
+    public HashMap<Integer, HashMap<String, Double>> getYearsMap() {
+        HashMap<Integer, HashMap<String, Double>> yearsMap = new HashMap<>();
 
-        yearValues.forEach((year, values) -> {
-            yearsMap.put(year, values.getValues());
-        });
+        yearValues.forEach((year, values) -> yearsMap.put(year, values.getValues()));
 
         return yearsMap;
     }
@@ -41,7 +39,7 @@ public class ScopeObject {
      * @param name  Name/key of the value being set
      * @param value Numeric value to set
      */
-    public void setYearValue(Integer year, String name, Float value) {
+    public void setYearValue(Integer year, String name, Double value) {
         if (!yearValues.containsKey(year)) {
             // Create the year object if it doesn't exist already
             yearValues.put(year, new YearObject(year));

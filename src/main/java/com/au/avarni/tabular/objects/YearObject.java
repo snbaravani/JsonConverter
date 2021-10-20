@@ -8,8 +8,8 @@ public class YearObject {
     private final Integer year;
 
     // Map of values in this year, initialised with a zero total value
-    private final HashMap<String, Float> values = new HashMap<>() {{
-        put("total", 0f);
+    private final HashMap<String, Double> values = new HashMap<>() {{
+        put("total", 0d);
     }};
 
     /**
@@ -21,7 +21,7 @@ public class YearObject {
         this.year = year;
     }
 
-    public HashMap<String, Float> getValues() {
+    public HashMap<String, Double> getValues() {
         return values;
     }
 
@@ -31,7 +31,7 @@ public class YearObject {
      * @param name  Name/key of the value
      * @param value Numeric value to set
      */
-    public void setValue(String name, Float value) {
+    public void setValue(String name, Double value) {
         values.put(name, value);
 
         // Recalculate the year's total value
