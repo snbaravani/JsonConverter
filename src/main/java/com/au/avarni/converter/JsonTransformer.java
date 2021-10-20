@@ -118,7 +118,7 @@ public class JsonTransformer {
 
             dataByLabelMap.put(data.getLabel(),data.getValue()) ;
             total = total + data.getValue();
-            dataByLabelMap.put("total",total);
+            dataByLabelMap.put("total",Math.round(total * 100.0) / 100.0);
 
             dataByFinYear.put(fy,dataByLabelMap);
             scopesData.put(scope, dataByFinYear);
