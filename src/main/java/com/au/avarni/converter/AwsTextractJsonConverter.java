@@ -3,11 +3,12 @@ package com.au.avarni.converter;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.List;
 
-public class HelloWorld {
+/**
+ * Converts csvs produced by the AWS Textract to Jsons
+ */
+public class AwsTextractJsonConverter {
     public static void main(String[] args) throws IOException, CsvException {
-        CsvReader.readCsvs();
+        JsonTransformer.readCsvs();
     }
 }

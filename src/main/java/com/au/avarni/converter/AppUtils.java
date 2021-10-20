@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
+/**
+ * Contails utility methods
+ */
 public class AppUtils {
     public static boolean containsScope1(String value){
         if(value != null && (value.contains("Scope1") ||value.contains("SCOPE 1")   || value.contains("(Scope 1)") ||
@@ -34,11 +34,16 @@ public class AppUtils {
         return false;
     }
 
+    /**
+     * Converts Map into corresponding Json structure and writes into a file
+     * @param fileName
+     * @param scopesData
+     * @throws IOException
+     */
 
-    public static void createJson(String fileName, Map<String, Map<String, Double>> scopesData) throws IOException {
+    public static void createJson(String fileName, Map<String, TreeMap<String, TreeMap<String, Double>>> scopesData) throws IOException {
 
         String json = new ObjectMapper().writeValueAsString(scopesData);
-        System.out.println(json);
         FileWriter fileWriter = new FileWriter(fileName);
         fileWriter.write(json);
         fileWriter.flush();
