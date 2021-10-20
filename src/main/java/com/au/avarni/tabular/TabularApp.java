@@ -2,6 +2,7 @@ package com.au.avarni.tabular;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
 
 public class TabularApp {
     public static void main(String[] args) throws Exception {
@@ -22,6 +23,6 @@ public class TabularApp {
         // 3. Extract, cleanse & aggregate data from emissions tables, formatting it into the target JSON
         String targetJSON = TabularTransformer.transformEmissionsTables(emissionsTables);
 
-        System.out.println(targetJSON);
+        System.out.println(Jsoner.prettyPrint(targetJSON));
     }
 }
