@@ -3,11 +3,7 @@ package com.au.avarni.tabular;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
+import java.io.*;
 import java.util.stream.Collectors;
 
 public class TabularFileReader {
@@ -18,8 +14,8 @@ public class TabularFileReader {
      * @param filename JSON file name
      * @return A simple JsonObject
      */
-    public static JsonObject readJSONFile(String filename) throws IOException, URISyntaxException {
-        String json = getResourceFileAsString(filename);
+    public static JsonObject readJSONFile(String filename) throws IOException {
+        String json = getResourceFileAsString("json" + File.separator + filename);
 
         return Jsoner.deserialize(json, new JsonObject());
     }

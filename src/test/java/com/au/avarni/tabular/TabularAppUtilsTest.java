@@ -100,7 +100,7 @@ public class TabularAppUtilsTest {
     @Test
     public void getCellLabel_NoNumber_ReturnsWholeString() {
         String expected = "123 abc";
-        String actual = TabularAppUtils.getCellLabel("123 abc");
+        String actual = TabularAppUtils.getRowLabel("123 abc");
 
         assertEquals(expected, actual);
     }
@@ -108,8 +108,25 @@ public class TabularAppUtilsTest {
     @Test
     public void getCellLabel_WithNumber_ReturnsLabel() {
         String expected = "123 abc";
-        String actual = TabularAppUtils.getCellLabel(" 123 abc 1,234.56");
+        String actual = TabularAppUtils.getRowLabel(" 123 abc 1,234.56");
 
         assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"false", "truez"})
+    public void isTrue_NotTrueString_ReturnsFalse(String inputStr) {
+        Boolean actual = TabularAppUtils.isTrue(inputStr);
+
+        assertFalse(actual);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"true", "TRUE", "TrUe"})
+    public void isTrue_WithTrueString_ReturnsTrue(String inputStr) {
+        Boolean actual = TabularAppUtils.isTrue(inputStr);
+
+        assertTrue(actual);
     }
 }

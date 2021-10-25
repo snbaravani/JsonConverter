@@ -25,6 +25,12 @@ public class TabularAppUtils {
     private static final Pattern cellValuePattern = Pattern.compile(cellValueRegex);
 
     /**
+     * Regex to extract the human-readable content of a row label
+     */
+    private static final String labelContentRegex = "^\\W*([\\w|\\s]+)\\b.*$";
+    private static final Pattern labelContentPattern = Pattern.compile(labelContentRegex);
+
+    /**
      * Given a 4 digit year or FY** format, returns a 4 digit year integer.
      *
      * @param year Any one of: 2021, FY21
@@ -131,18 +137,38 @@ public class TabularAppUtils {
      * @param cell String cell content
      * @return Label from the start of the string or the whole string if no trailing number found
      */
-    public static String getCellLabel(String cell) {
+    public static String getRowLabel(String cell) {
         try {
             Matcher scopeMatcher = cellValuePattern.matcher(cell);
 
             if (scopeMatcher.find()) {
-                return cell.substring(0, scopeMatcher.start()).strip();
+                String label = cell.substring(0, scopeMatcher.start()).strip();
+
+                label = scopePattern.matcher(label).replaceFirst("");
+
+                Matcher contentMatcher = labelContentPattern.matcher(label);
+
+                if (contentMatcher.find()) {
+                    label = contentMatcher.group(1);
+                }
+
+                return label;
             }
         } catch (Exception e) {
-            System.err.println("Error whilst extracting cell value from: \"" + cell + "\"");
+            System.err.println("Error whilst extracting row label from: \"" + cell + "\"");
             e.printStackTrace();
         }
 
         return cell;
+    }
+
+    /**
+     * Returns true if the passed value is the string "true" (case-insensitive)
+     *
+     * @param value String value
+     * @return Boolean true if value is "true"
+     */
+    public static Boolean isTrue(String value) {
+        return value != null && value.equalsIgnoreCase("true");
     }
 }
