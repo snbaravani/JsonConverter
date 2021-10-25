@@ -12,7 +12,7 @@ public class TabularApp {
             System.out.println("Please pass the JSON file name to be parsed");
         }
 
-        System.out.println("Transforming " + filename);
+        System.out.println("Transforming resources/json/" + filename);
 
         // 1. Get a JsonObject from the specified JSON file
         JsonObject crawlerJSON = TabularFileReader.readJSONFile(filename);

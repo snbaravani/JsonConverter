@@ -7,6 +7,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -35,7 +36,7 @@ public class TabularTransformer {
      *
      * @return JSON array of strings representing tabular data
      */
-    public static JsonArray findEmissionsTables(JsonObject crawlerJSON) {
+    public static JsonArray findEmissionsTables(JsonObject crawlerJSON) throws Exception {
         JsonKey statusKey = Jsoner.mintJsonKey("status", new JsonObject());
         JsonObject statusObject = crawlerJSON.getMap(statusKey);
 
@@ -48,6 +49,14 @@ public class TabularTransformer {
 
             return !emissionsTablePattern.matcher(tableStr).find();
         });
+
+        var config = TabularAppConfig.getAppConfig();
+        Boolean onlyFirstTable = TabularAppUtils.isTrue(config.get("onlyFirstTable"));
+
+        // If only the first table is needed, remove all others
+        if (onlyFirstTable) {
+            return new JsonArray(List.of(tables.get(0)));
+        }
 
         return tables;
     }
@@ -104,19 +113,24 @@ public class TabularTransformer {
                 String[] cells = row.split(", ");
 
                 String rowLabelCell = cells[0];
-                String rowLabel = TabularAppUtils.getCellLabel(rowLabelCell);
+                String rowLabel = TabularAppUtils.getRowLabel(rowLabelCell);
                 Integer rowScope = TabularAppUtils.getScopeNumber(rowLabelCell);
 
                 if (rowScope != null) {
                     currentScope = rowScope;
                 }
 
-                // Skip parsing row if it's empty or if there's no scope encountered in the table yet
-                if (TabularAppUtils.isEmptyRow(row) || currentScope == null) {
+                // Skip parsing row if any of these are true:
+                //  - it's empty
+                //  - no scope encountered in the table yet
+                //  - row label contains "total" (the year object calculates the total from child fields)
+                if (
+                        TabularAppUtils.isEmptyRow(row)
+                                || currentScope == null
+                                || rowLabel.toLowerCase().contains("total")
+                ) {
                     continue;
                 }
-
-                // TODO: Format `rowLabel` for use in JSON key (e.g., removing scope number)
 
                 // Loop over each column based on the year heading, storing the value in each cell
                 for (Map.Entry<Integer, Integer> entry : yearColumnIndexes.entrySet()) {
