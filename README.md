@@ -101,16 +101,17 @@ To transform the source data into the target JSON structure, the following needs
 
 ### How to build and run the application 
 
-1. Clone the source code from 
+1. Clone the source code from https://github.com/snbaravani/JsonConverter - "
+git clone https://github.com/snbaravani/JsonConverter.git"
 
 1. Make sure your have maven 3.x, Docker and Java 11 installed 
 
-2. Store your csv and tabular files are stored in a directory on the host machine at /some/folder
+2. Store your csv and tabular files in a directory on the host machine at /some/folder
 
-3. Run "mvn package" where you have clone  the source code from github
+3. Run "mvn package" where you have cloned the source code from github
 
-4. Run "docker build . -t avarni-transformer:1.0"
+4. Run "docker build . -t avarni-transformer:1.0". This will create a a docker image "docker.io/library/avarni-transformer:1.0"
 
-5. Run "docker run -v /some/folder/:/avarni/reports docker.io/library/avarni-transformer:1.0 csv /avarni/reports/some.csv"
+5. Run "docker run -v /some/folder/:/avarni/reports docker.io/library/avarni-transformer:1.0 csv /avarni/reports/some.csv" [pass 'tab' instead of csv for tabular data processing]
 
-Transformed json file will be available at /some/folder
+Transformed json file will be available at /some/folder on the host machine
