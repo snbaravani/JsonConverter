@@ -98,3 +98,19 @@ To transform the source data into the target JSON structure, the following needs
 ### Implementation Notes
 
 - Regular expressions have been heavily used to perform string pattern-matching and data cleansing.
+
+### How to build and run the application 
+
+1. Clone the source code from 
+
+1. Make sure your have maven 3.x, Docker and Java 11 installed 
+
+2. Store your csv and tabular files are stored in a directory on the host machine at /some/folder
+
+3. Run "mvn package" where you have clone  the source code from github
+
+4. Run "docker build . -t avarni-transformer:1.0"
+
+5. Run "docker run -v /some/folder/:/avarni/reports docker.io/library/avarni-transformer:1.0 csv /avarni/reports/some.csv"
+
+Transformed json file will be available at /some/folder
