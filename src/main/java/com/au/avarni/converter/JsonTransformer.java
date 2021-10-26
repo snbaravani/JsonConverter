@@ -19,21 +19,19 @@ public class JsonTransformer {
 
     private static int processedRows ;
 
-    public static void readCsvs() throws IOException, CsvException {
-       // String[] fileList = {"atlassian.csv","amazon.csv","microsoft.csv"};
-        String[] fileList = {"atlassian.csv"};
-        for(int i = 0; i<fileList.length;i++){
-            System.out.println(fileList[i]);
-            URL fileUrl = JsonTransformer.class.getClassLoader().getResource(fileList[i]); //atlassian.csv,amazon.csv,microsoft.csv
-            try (CSVReader reader = new CSVReader(new FileReader(fileUrl.getFile()))) {
+    public static void readCsvs(File file)  {
+        System.out.println("<==readCsvs==>");
+        System.out.println("Processing..."+file.getName());
+            try (CSVReader reader = new CSVReader(new FileReader(file))) {
                 List<String[]> data = reader.readAll();
                 getFinYears(data.get(0));
                 getDataByScope(data);
                 createHashMap();
-                createJson(fileList[i].replace("csv", "json"),scopesData);
+                createJson(file.getName().replace("csv", "json"), scopesData);
                 clearData();
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }
     }
 
     private static void getDataByScope(List<String[]> data) {

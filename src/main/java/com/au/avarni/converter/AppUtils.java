@@ -44,6 +44,8 @@ public class AppUtils {
     public static void createJson(String fileName, Map<String, TreeMap<String, TreeMap<String, Double>>> scopesData) throws IOException {
 
         String json = new ObjectMapper().writeValueAsString(scopesData);
+        fileName = "/avarni/reports/"+fileName;
+        System.out.println("Creating the json file ==>"+fileName);
         FileWriter fileWriter = new FileWriter(fileName);
         fileWriter.write(json);
         fileWriter.flush();
