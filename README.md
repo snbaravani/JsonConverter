@@ -71,10 +71,10 @@ Example `run.sh` usages:
 sh ./run.sh csv $(pwd)/data/csv atlassian.csv
 
 # Use the tabular converter to transform ./data/tabular/microsoft.json
-sh ./run.sh tab $(pwd)/data/tabular microsoft.json
+sh ./run.sh tabular $(pwd)/data/tabular microsoft.json
 
 # Optionally, tell the app where to write the results JSON file to
-sh ./run.sh tab $(pwd)/data/tabular microsoft.json /custom-dir/results
+sh ./run.sh tabular $(pwd)/data/tabular microsoft.json /custom-dir/results
 ```
 
 > You may use any path for the source data directory, but it must be an absolute path.

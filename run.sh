@@ -4,7 +4,7 @@ CONVERSION_MODE="$1"
 HOST_INPUT_DIR="$2"
 INPUT_FILENAME="$3"
 
-if [ "$CONVERSION_MODE" != "tab" ] && [ "$CONVERSION_MODE" != "csv" ]; then
+if [ "$CONVERSION_MODE" != "tabular" ] && [ "$CONVERSION_MODE" != "csv" ]; then
   echo "The first argument must be either \"tab\" or \"csv\""
   exit
 fi

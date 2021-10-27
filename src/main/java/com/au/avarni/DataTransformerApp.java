@@ -21,7 +21,7 @@ public class DataTransformerApp {
         if (args[0].equals(tabularName)) {
             System.out.println("\n Calling Tabular transformer ! \n");
             TabularApp.convertJSON(new File(args[1]), resultsPath);
-        } else if (args[0].equals("csv")) {
+        } else if (args[0].equals(csvName)) {
             System.out.println("\n Calling CSV transformer ! \n");
             JsonTransformer.readCsvs(new File(args[1]), resultsPath);
         }
