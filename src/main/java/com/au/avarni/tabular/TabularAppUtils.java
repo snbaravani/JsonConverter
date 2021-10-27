@@ -31,24 +31,24 @@ public class TabularAppUtils {
     private static final Pattern labelContentPattern = Pattern.compile(labelContentRegex);
 
     /**
-     * Given a 4 digit year or FY** format, returns a 4 digit year integer.
+     * Given a 4 digit year or FY** format, returns a 4 digit year.
      *
      * @param year Any one of: 2021, FY21
      * @return A 4 digit year
      */
-    public static Integer getFinancialYear(String year) {
+    public static String getFinancialYear(String year) {
         if (year == null) {
             return null;
         }
 
         // FY** year
         if (year.toUpperCase(Locale.ROOT).startsWith("FY")) {
-            return Integer.valueOf("20" + year.replaceFirst("FY", ""));
+            return "20" + year.replaceFirst("FY", "");
         }
 
         // 4 digit year
         if (year.length() == 4) {
-            return Integer.valueOf(year);
+            return year;
         }
 
         // Unrecognised format

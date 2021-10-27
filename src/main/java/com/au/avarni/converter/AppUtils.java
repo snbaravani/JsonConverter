@@ -1,12 +1,5 @@
 package com.au.avarni.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-
 /**
  * Contails utility methods
  */
@@ -35,23 +28,4 @@ public class AppUtils {
         return false;
     }
 
-    /**
-     * Converts Map into corresponding Json structure and writes into a file
-     *
-     * @param fileName
-     * @param scopesData
-     * @throws IOException
-     */
-
-    public static void createJson(String fileName, Map<String, TreeMap<String, TreeMap<String, Double>>> scopesData) throws IOException {
-
-        String json = new ObjectMapper().writeValueAsString(scopesData);
-        fileName = "/avarni/reports/results/" + fileName;
-        System.out.println("Creating the json file ==>" + fileName);
-        FileWriter fileWriter = new FileWriter(fileName);
-        fileWriter.write(json);
-        fileWriter.flush();
-
-
-    }
 }

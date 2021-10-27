@@ -8,7 +8,7 @@ public class ScopeObject {
     private final String label;
 
     // Map of years to their values
-    private final HashMap<Integer, YearObject> yearValues = new HashMap<>();
+    private final HashMap<String, YearObject> yearValues = new HashMap<>();
 
     /**
      * Initialise the scope object with an index number, used to create the label.
@@ -24,8 +24,8 @@ public class ScopeObject {
      *
      * @return Map of year value maps
      */
-    public HashMap<Integer, HashMap<String, Double>> getYearsMap() {
-        HashMap<Integer, HashMap<String, Double>> yearsMap = new HashMap<>();
+    public HashMap<String, HashMap<String, Double>> getYearsMap() {
+        HashMap<String, HashMap<String, Double>> yearsMap = new HashMap<>();
 
         yearValues.forEach((year, values) -> yearsMap.put(year, values.getValues()));
 
@@ -39,7 +39,7 @@ public class ScopeObject {
      * @param name  Name/key of the value being set
      * @param value Numeric value to set
      */
-    public void setYearValue(Integer year, String name, Double value) {
+    public void setYearValue(String year, String name, Double value) {
         if (!yearValues.containsKey(year)) {
             // Create the year object if it doesn't exist already
             yearValues.put(year, new YearObject(year));

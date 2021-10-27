@@ -12,8 +12,8 @@ public class TabularAppUtilsTest {
     @ParameterizedTest
     @ValueSource(strings = {"FY21", "2021"})
     public void getFinancialYear_ValidYear_ReturnsCompleteYear(String inputYear) {
-        Integer expected = 2021;
-        Integer actual = TabularAppUtils.getFinancialYear(inputYear);
+        String expected = "2021";
+        String actual = TabularAppUtils.getFinancialYear(inputYear);
 
         assertEquals(expected, actual);
     }

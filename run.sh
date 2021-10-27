@@ -18,11 +18,8 @@ DOCKER_INPUT_DIR="/avarni/reports"
 DOCKER_VOLUME="${HOST_INPUT_DIR}:${DOCKER_INPUT_DIR}"
 DOCKER_INPUT_FILE="${DOCKER_INPUT_DIR}/${INPUT_FILENAME}"
 
-echo "This will build and run a Docker container for the JSON transformer app"
+echo "This will run the Docker image for the JSON transformer app as a container"
 echo "Using the ${CONVERSION_MODE} conversion mode"
-
-echo "Building the docker image..."
-docker build . -t avarni-transformer:1.0
 
 echo "Running the container with the ${CONVERSION_MODE} app..."
 docker run \

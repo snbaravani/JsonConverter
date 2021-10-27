@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class YearObject {
 
     // Year number this object relates to
-    private final Integer year;
+    private final String year;
 
     // Map of values in this year, initialised with a zero total value
     private final HashMap<String, Double> values = new HashMap<>() {{
@@ -15,9 +15,9 @@ public class YearObject {
     /**
      * Initialise the year object with a 4 digit year number
      *
-     * @param year
+     * @param year String of a 4 digit year
      */
-    public YearObject(Integer year) {
+    public YearObject(String year) {
         this.year = year;
     }
 

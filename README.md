@@ -60,17 +60,21 @@ The app can be run against CSVs (**converter** app) or JSON files (**tabular** a
    `git clone https://github.com/snbaravani/JsonConverter.git`
 2. Make sure your have Docker installed
 3. Store your csv/json files in a directory on the host machine
-4. Run the script, passing your arguments (examples below)
-5. The resulting JSON file will be created under a `results` directory in the same folder as your source data files
+4. Build the docker image: `sh ./build.sh`
+5. Run the script, passing your arguments (examples below)
+6. The resulting JSON file will be created under a `results` directory in the same folder as your source data files
 
-Example usages:
+Example `run.sh` usages:
 
 ```shell
 # Use the CSV converter to transform ./data/csv/atlassian.csv:
 sh ./run.sh csv $(pwd)/data/csv atlassian.csv
 
-# Use the tabular converter to transform ./data/tabular/crawler-microsoft.json
-sh ./run.sh tab $(pwd)/data/tabular crawler-microsoft.json
+# Use the tabular converter to transform ./data/tabular/microsoft.json
+sh ./run.sh tab $(pwd)/data/tabular microsoft.json
+
+# Optionally, tell the app where to write the results JSON file to
+sh ./run.sh tab $(pwd)/data/tabular microsoft.json /custom-dir/results
 ```
 
 > You may use any path for the source data directory, but it must be an absolute path.

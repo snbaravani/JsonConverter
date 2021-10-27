@@ -84,7 +84,7 @@ public class TabularTransformer {
             String[] columnNames = headerRow.split(",");
 
             // Define a map storing the column index of each year (key: index, value: year)
-            HashMap<Integer, Integer> yearColumnIndexes = new HashMap<>();
+            HashMap<Integer, String> yearColumnIndexes = new HashMap<>();
 
             // Extract years from the header row cells, recording each column index they occupy
             for (Integer headerCellIndex = 0; headerCellIndex < columnNames.length; headerCellIndex++) {
@@ -92,7 +92,7 @@ public class TabularTransformer {
 
                 // Check if the column name is a year value
                 if (yearPattern.matcher(columnName).find()) {
-                    Integer year = TabularAppUtils.getFinancialYear(columnName);
+                    String year = TabularAppUtils.getFinancialYear(columnName);
 
                     // Set the column index of this year
                     yearColumnIndexes.put(headerCellIndex, year);
@@ -133,9 +133,9 @@ public class TabularTransformer {
                 }
 
                 // Loop over each column based on the year heading, storing the value in each cell
-                for (Map.Entry<Integer, Integer> entry : yearColumnIndexes.entrySet()) {
+                for (Map.Entry<Integer, String> entry : yearColumnIndexes.entrySet()) {
                     Integer colIndex = entry.getKey();
-                    Integer year = entry.getValue();
+                    String year = entry.getValue();
 
                     String rawValue = cells[colIndex];
                     Double numericValue = null;
@@ -155,7 +155,7 @@ public class TabularTransformer {
         });
 
         // Convert the map of scope objects into a map of maps for JSON serialization
-        HashMap<String, HashMap<Integer, HashMap<String, Double>>> jsonMap = new HashMap<>();
+        HashMap<String, HashMap<String, HashMap<String, Double>>> jsonMap = new HashMap<>();
         scopesMap.forEach((scopeName, scopeObject) -> {
             jsonMap.put(scopeName, scopeObject.getYearsMap());
         });
