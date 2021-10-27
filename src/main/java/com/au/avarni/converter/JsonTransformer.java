@@ -1,14 +1,22 @@
 package com.au.avarni.converter;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 import static com.au.avarni.converter.AppUtils.*;
 
+/**
+ * AWS Textract is a tool that is similar to Avarni’s crawler. It takes sustainability reports and generates
+ * relevant short reports in the csv format.
+ *
+ * We have also explored this tool and developed an application that transforms these csv’s into Json format. This application will be handy
+ * if team at Avarni wants to use this tool in the future.
+ *
+ * We have tested this app with reports from 3 companies (Amazon,Attlassian,Microsoft) that are not entirely similar and tried to produce Json files.
+ * These are available in the resources folder
+ */
 public class JsonTransformer {
 
     private static Map<String, TreeMap<String,TreeMap<String, Double>>> scopesData = new TreeMap<>(); // Scope->Fy->Labels
