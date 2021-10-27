@@ -7,6 +7,8 @@ Currently, it contains the following:
 - `converter` - Converts CSVs into JSON
 - `tabular` - Converts arrays of tables (defined as strings) into JSON
 
+---
+
 ## Goals
 
 The main aim is to test out different methods of taking sample datasets and turning those into a standardised JSON
@@ -47,6 +49,33 @@ The target JSON structure looks like this:
 The 3 `scope*` fields are all required. The nested year objects can have dynamic names using the full year number.
 Within each year object, the `total` field is required. Other fields inside the year objects are optional and dynamic (
 any field name is possible based on the source data).
+
+---
+
+## Run the application
+
+The app can be run against CSVs (**converter** app) or JSON files (**tabular** app). The below steps apply to both.
+
+1. Clone the source code from https://github.com/snbaravani/JsonConverter:
+   `git clone https://github.com/snbaravani/JsonConverter.git`
+2. Make sure your have Docker installed
+3. Store your csv/json files in a directory on the host machine
+4. Run the script, passing your arguments (examples below)
+5. The resulting JSON file will be created under a `results` directory in the same folder as your source data files
+
+Example usages:
+
+```shell
+# Use the CSV converter to transform ./data/csv/atlassian.csv:
+sh ./run.sh csv $(pwd)/data/csv atlassian.csv
+
+# Use the tabular converter to transform ./data/tabular/crawler-microsoft.json
+sh ./run.sh tab $(pwd)/data/tabular crawler-microsoft.json
+```
+
+> You may use any path for the source data directory, but it must be an absolute path.
+
+---
 
 ## Tabular approach
 
@@ -98,20 +127,3 @@ To transform the source data into the target JSON structure, the following needs
 ### Implementation Notes
 
 - Regular expressions have been heavily used to perform string pattern-matching and data cleansing.
-
-### How to build and run the application 
-
-1. Clone the source code from https://github.com/snbaravani/JsonConverter - "
-git clone https://github.com/snbaravani/JsonConverter.git"
-
-1. Make sure your have maven 3.x, Docker and Java 11 installed 
-
-2. Store your csv and tabular files in a directory on the host machine at /some/folder
-
-3. Run "mvn package" where you have cloned the source code from github
-
-4. Run "docker build . -t avarni-transformer:1.0". This will create a a docker image "docker.io/library/avarni-transformer:1.0"
-
-5. Run "docker run -v /some/folder/:/avarni/reports docker.io/library/avarni-transformer:1.0 csv /avarni/reports/some.csv" [pass 'tab' instead of csv for tabular data processing]
-
-Transformed json file will be available at /some/folder on the host machine
