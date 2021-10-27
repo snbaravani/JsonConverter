@@ -1,6 +1,6 @@
 package com.au.avarni.tabular.objects;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class ScopeObject {
 
@@ -8,7 +8,7 @@ public class ScopeObject {
     private final String label;
 
     // Map of years to their values
-    private final HashMap<String, YearObject> yearValues = new HashMap<>();
+    private final TreeMap<String, YearObject> yearValues = new TreeMap<>();
 
     /**
      * Initialise the scope object with an index number, used to create the label.
@@ -24,8 +24,8 @@ public class ScopeObject {
      *
      * @return Map of year value maps
      */
-    public HashMap<String, HashMap<String, Double>> getYearsMap() {
-        HashMap<String, HashMap<String, Double>> yearsMap = new HashMap<>();
+    public TreeMap<String, TreeMap<String, Double>> getYearsMap() {
+        TreeMap<String, TreeMap<String, Double>> yearsMap = new TreeMap<>();
 
         yearValues.forEach((year, values) -> yearsMap.put(year, values.getValues()));
 
@@ -46,5 +46,14 @@ public class ScopeObject {
         }
 
         yearValues.get(year).setValue(name, value);
+    }
+
+    /**
+     * Attempts to remove values that are actually totals of other fields inside each year object.
+     */
+    public void removeRawTotalValues() {
+        yearValues.forEach((year, values) -> {
+            values.removeRawTotalValue();
+        });
     }
 }

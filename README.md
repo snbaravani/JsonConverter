@@ -98,8 +98,8 @@ structure looking like this:
 
 ### Source data assumptions
 
-Some sample JSON datasets are available under `src/main/resources/json`. The following are assumptions made based on the
-available samples.
+Some sample JSON datasets are available under `data/tabular`. The following are assumptions made based on the available
+samples.
 
 - Tables data can be found in a fixed location within each JSON structure at: `"status: { "tables": [] }`.
 - Tables are represented by strings. Each string starts with: `Table: Table_1\n\n,`, where `Table_1` can end with any
@@ -113,6 +113,7 @@ available samples.
 - All samples seen so far contain at least one "total" row. This is redundant as all other values in the scope should
   add up to the same figure, so any rows containing *total* are ignored, and the `total` field in the target JSON can be
   calculated based on the fields.
+- Some reports don't specify a scope number in every row (e.g., Amazon & Atlassian)
 
 ### Transformation process
 
@@ -125,9 +126,26 @@ To transform the source data into the target JSON structure, the following needs
 2. Extract values data from each important table, ensuring scope and year are captured for each
 3. Perform some data cleansing, such as removing commas from large numbers (`3,465,234` to `3465234`) and dropping
    irrelevant values or values that can't be parsed
-5. Aggregate and categorise all cleansed data by scope and year
-6. Convert the aggregated data into the target JSON structure
+4. Aggregate and categorise all cleansed data by scope and year
+5. Convert the aggregated data into the target JSON structure
 
 ### Implementation Notes
 
 - Regular expressions have been heavily used to perform string pattern-matching and data cleansing.
+- The config inside `src/main/resources/config.properties` provides some basic control over the transformation process.
+    - `tabularApp.onlyFirstTable=true` will stop the transformer from processing any tables after the first found one
+      containing emissions data. This was done for cases like Microsoft's report where they include many tables
+      featuring the same column headings (which are used to determine if a table is relevant), but different kinds of
+      values in each table. Enabling this limits the parsing to the first matched table, which might ignore other tables
+      in the raw data that should be combined with the first match.
+    - `tabularApp.excludeTotalValues=true` tells the transformer to try to calculate if a cell's value is actually a
+      total value of everything within a scope. This was added as different companies print their scope totals in
+      different formats, sometimes mixing them with individual item values. Enabling this may result in false-positive
+      matches as a value that isn't technically a total might still add up to the total of all other fields in the
+      scope.
+
+### Caveats & Areas for improvement
+
+- Accuracy of results is hard (next to impossible) to achieve 100% in across all PDFs with a completely dynamic solution
+  requiring no vendor-specific configurations. To improve results, it's recommended to employ some form of
+  vendor-specific regular expressions or even business logic where there are wide variances in table structure.

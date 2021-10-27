@@ -9,6 +9,7 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class TabularTransformer {
@@ -67,7 +68,7 @@ public class TabularTransformer {
      * @return The target JSON object (see README.md for example object)
      */
     public static String transformEmissionsTables(JsonArray emissionsTables) {
-        HashMap<String, ScopeObject> scopesMap = new HashMap<>() {{
+        TreeMap<String, ScopeObject> scopesMap = new TreeMap<>() {{
             put("scope1", new ScopeObject(1));
             put("scope2", new ScopeObject(2));
             put("scope3", new ScopeObject(3));
@@ -122,8 +123,8 @@ public class TabularTransformer {
 
                 // Skip parsing row if any of these are true:
                 //  - it's empty
-                //  - no scope encountered in the table yet
-                //  - row label contains "total" (the year object calculates the total from child fields)
+                //  - no scope encountered in the table yet (to ignore irrelevant rows that come before any scope rows)
+                //  - row label contains "total" (don't need totals from the raw data, this gets calculated dynamically)
                 if (
                         TabularAppUtils.isEmptyRow(row)
                                 || currentScope == null
@@ -155,8 +156,10 @@ public class TabularTransformer {
         });
 
         // Convert the map of scope objects into a map of maps for JSON serialization
-        HashMap<String, HashMap<String, HashMap<String, Double>>> jsonMap = new HashMap<>();
+        TreeMap<String, TreeMap<String, TreeMap<String, Double>>> jsonMap = new TreeMap<>();
         scopesMap.forEach((scopeName, scopeObject) -> {
+            scopeObject.removeRawTotalValues();
+
             jsonMap.put(scopeName, scopeObject.getYearsMap());
         });
 
