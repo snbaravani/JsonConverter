@@ -35,7 +35,6 @@ public class JsonTransformer {
 
     public static void readCsvs(File file, String resultsPath) {
         System.out.println("<==readCsvs==>");
-        System.out.println("Processing..." + file.getName());
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
             List<String[]> data = reader.readAll();
             getFinYears(data.get(0));
@@ -73,24 +72,22 @@ public class JsonTransformer {
                 return;
             } else if (row[0].contains("(" + scopeNumber + ")") || scopeBracket) { // Amazon pattern, Ex: "Emissions from Purchased Electricity (Scope 2)
                 scopeBracket = true;
-
                 createDataset(scopeStar, row[0], row);
 
             } else if (val != null && (scopeNum || val.contains(scopeNumber) || val.contains(scopeNumber.toUpperCase()))) {
-                //Microsoft pattern,  "Scope 1 Scope1-based² ","2,697,554 ","10000 ","3,557,518 ","4,102,445 ",
                 scopeNum = true;
-                if (row[0].startsWith(scopeNumber) && row[0].length() > 15) {
-                    String label = row[0].replace(scopeNumber, ""); //Remove 'Scope x from the label
+                String label =row[0];
+                if (label.startsWith(scopeNumber) && row[0].length() > 15) {
+                    label = label.replace(scopeNumber, ""); //Remove 'Scope x from the label
                     if(label.contains("-")){
                         label= label.replaceFirst("-","");
                     }
                     String value = row[2];
-                    if (label != null && value != null && label.length() > 2 && value.length() > 2) {
+                    if (label != null && value != null && !label.isEmpty() && !value.isEmpty()) {
                         createDataset(scopeStar, label.strip(), row);
                     }
 
                 } else if (!row[0].contains(scopeNumber.toUpperCase()) && !row[0].contains("(" + scopeNumber + ")")) {
-                    // Attlassian,"SCOPE 1 ","119.4 ","0.14% ","274.9 ","0.4% ",
                     scopeNum = true;
                     createDataset(scopeStar, row[0], row);
                 }
@@ -123,6 +120,16 @@ public class JsonTransformer {
 
     }
 
+    /**
+     * Creating hashmaps in the foll format
+     *
+     * Scope1 > 2019 -> goal 1
+     *               ->2 goal 2
+     *
+     * Scope1 > 2020 -> goal 1
+     *                -> goal 2
+     *
+     */
     private static void createHashMap() {
         TreeMap<String, TreeMap<String, Double>> dataByFinYear;
 
