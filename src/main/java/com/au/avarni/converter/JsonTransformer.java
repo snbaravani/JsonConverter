@@ -73,6 +73,7 @@ public class JsonTransformer {
                 return;
             } else if (row[0].contains("(" + scopeNumber + ")") || scopeBracket) { // Amazon pattern, Ex: "Emissions from Purchased Electricity (Scope 2)
                 scopeBracket = true;
+
                 createDataset(scopeStar, row[0], row);
 
             } else if (val != null && (scopeNum || val.contains(scopeNumber) || val.contains(scopeNumber.toUpperCase()))) {
@@ -80,9 +81,12 @@ public class JsonTransformer {
                 scopeNum = true;
                 if (row[0].startsWith(scopeNumber) && row[0].length() > 15) {
                     String label = row[0].replace(scopeNumber, ""); //Remove 'Scope x from the label
+                    if(label.contains("-")){
+                        label= label.replaceFirst("-","");
+                    }
                     String value = row[2];
                     if (label != null && value != null && label.length() > 2 && value.length() > 2) {
-                        createDataset(scopeStar, row[0], row);
+                        createDataset(scopeStar, label.strip(), row);
                     }
 
                 } else if (!row[0].contains(scopeNumber.toUpperCase()) && !row[0].contains("(" + scopeNumber + ")")) {
@@ -107,7 +111,9 @@ public class JsonTransformer {
             }
             double numericVal = (val != null && val.contains(",")) ? Double.parseDouble(val.replaceAll(",", "")) : Double.parseDouble(val);
             data.setScope(scopeStar);
-            data.setFinYear(finYears.keySet().toArray()[i].toString());
+            String finYear = finYears.keySet().toArray()[i].toString();
+            finYear = (finYear != null && finYear.contains("FY"))?finYear.replace("FY","20") : finYear;
+            data.setFinYear(finYear+"*");
             data.setLabel(label);
             data.setLabel(label);
             data.setValue(numericVal);
