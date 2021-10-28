@@ -144,12 +144,18 @@ public class TabularAppUtils {
             if (scopeMatcher.find()) {
                 String label = cell.substring(0, scopeMatcher.start()).strip();
 
-                label = scopePattern.matcher(label).replaceFirst("");
+                var config = TabularAppConfig.getAppConfig();
 
-                Matcher contentMatcher = labelContentPattern.matcher(label);
+                if (config.getRemoveLabelScope()) {
+                    label = scopePattern.matcher(label).replaceFirst("");
+                }
 
-                if (contentMatcher.find()) {
-                    label = contentMatcher.group(1);
+                if (config.getCleanLabels()) {
+                    Matcher contentMatcher = labelContentPattern.matcher(label);
+
+                    if (contentMatcher.find()) {
+                        label = contentMatcher.group(1);
+                    }
                 }
 
                 return label;

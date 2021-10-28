@@ -1,0 +1,12 @@
+# Remove "scope N" from field labels.
+removeLabelScope: true
+
+# Cleans up labels to remove special characters/excess whitespace.
+cleanLabels: true
+
+# Only process the first found table in the raw JSON tables array,
+# otherwise will concatenate all matching table results.
+onlyFirstTable: true
+
+# Attempt to find & remove rows containing a numeric total value.
+excludeTotalValues: true

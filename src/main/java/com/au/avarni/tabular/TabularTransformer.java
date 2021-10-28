@@ -52,10 +52,9 @@ public class TabularTransformer {
         });
 
         var config = TabularAppConfig.getAppConfig();
-        Boolean onlyFirstTable = TabularAppUtils.isTrue(config.get("onlyFirstTable"));
 
         // If only the first table is needed, remove all others
-        if (onlyFirstTable) {
+        if (config.getOnlyFirstTable()) {
             return new JsonArray(List.of(tables.get(0)));
         }
 

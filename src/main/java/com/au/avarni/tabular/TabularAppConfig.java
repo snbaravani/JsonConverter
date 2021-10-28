@@ -1,47 +1,30 @@
 package com.au.avarni.tabular;
 
-import java.io.FileNotFoundException;
+import com.au.avarni.tabular.objects.TabularConfigObject;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class TabularAppConfig {
 
-    private static Map<String, String> config = null;
-    private static final String propertyPrefix = "tabularApp.";
+    private static TabularConfigObject config = null;
 
     /**
-     * Returns the key-value pairs stored inside resources/config.properties.
+     * Returns the key-value pairs stored inside tabularConfig.yml.
      *
-     * @return Key-value pairs from resources/config.properties
+     * @return Key-value pairs from tabularConfig.yml
      */
-    public static Map<String, String> getAppConfig() throws Exception {
+    public static TabularConfigObject getAppConfig() throws Exception {
         // Return existing config if already loaded before
         if (config != null) {
             return config;
         }
 
-        Properties properties = new Properties();
-
-        String propFileName = "config.properties";
-
-        InputStream inputStream = TabularAppUtils.class.getClassLoader().getResourceAsStream(propFileName);
-
-        if (inputStream != null) {
-            properties.load(inputStream);
-        } else {
-            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-        }
-
-        config = properties
-                .entrySet()
-                .stream()
-                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey().toString(), e.getValue().toString()))
-                .filter(e -> e.getKey().contains(propertyPrefix))
-                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey().replaceFirst(propertyPrefix, ""), e.getValue()))
-                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+        InputStream inputStream = new FileInputStream("tabularConfig.yml");
+        Yaml yaml = new Yaml(new Constructor(TabularConfigObject.class));
+        config = yaml.load(inputStream);
 
         return config;
     }

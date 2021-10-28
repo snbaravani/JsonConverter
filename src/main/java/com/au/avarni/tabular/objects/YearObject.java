@@ -1,7 +1,6 @@
 package com.au.avarni.tabular.objects;
 
 import com.au.avarni.tabular.TabularAppConfig;
-import com.au.avarni.tabular.TabularAppUtils;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class YearObject {
         try {
             var config = TabularAppConfig.getAppConfig();
 
-            if (TabularAppUtils.isTrue(config.get("excludeTotalValues"))) {
+            if (config.getExcludeTotalValues()) {
                 String keyToRemove = null;
 
                 // Loop within a loop here is to compare each value against the total of
