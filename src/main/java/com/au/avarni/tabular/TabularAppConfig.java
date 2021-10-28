@@ -12,9 +12,9 @@ public class TabularAppConfig {
     private static TabularConfigObject config = null;
 
     /**
-     * Returns the key-value pairs stored inside tabularConfig.yml.
+     * Returns the key-value pairs stored inside config/tabularConfig.yml.
      *
-     * @return Key-value pairs from tabularConfig.yml
+     * @return Key-value pairs from config/tabularConfig.yml
      */
     public static TabularConfigObject getAppConfig() throws Exception {
         // Return existing config if already loaded before
@@ -22,7 +22,7 @@ public class TabularAppConfig {
             return config;
         }
 
-        InputStream inputStream = new FileInputStream("tabularConfig.yml");
+        InputStream inputStream = new FileInputStream("config/tabularConfig.yml");
         Yaml yaml = new Yaml(new Constructor(TabularConfigObject.class));
         config = yaml.load(inputStream);
 

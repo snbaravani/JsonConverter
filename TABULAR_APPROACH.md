@@ -52,8 +52,8 @@ To transform the source data into the target JSON structure, the following needs
 
 - Regular expressions have been heavily used to perform string pattern-matching and data cleansing. This was done
   because they are portable and can be dropped into any other program. The tradeoff is they are hard to read.
-- The config inside `tabularConfig.yml` provides some basic controls over the transformation process. Do check out the
-  comments inside that file for an explanation of each control.
+- The config inside `config/tabularConfig.yml` provides some basic controls over the transformation process. Do check
+  out the comments inside that file for an explanation of each control.
 
 ## Caveats & Areas for improvement
 
@@ -71,5 +71,5 @@ It's hard (next to impossible) to achieve 100% accuracy across all PDF table for
 requiring no vendor-specific configurations. To improve results, it's recommended to employ some form of vendor-specific
 regular expressions or even business logic where there are wide variances in table structure.
 
-`tabularConfig.yml` may help when running the program against a specific set of data and this could be expanded to add
-control over regular expressions used in the app.
+`config/tabularConfig.yml` may help when running the program against a specific set of data and this could be expanded
+to add control over regular expressions used in the app.

@@ -76,7 +76,7 @@ sh ./run.sh csv $(pwd)/data/csv atlassian.csv
 # Use the tabular converter to transform ./data/tabular/microsoft.json
 sh ./run.sh tabular $(pwd)/data/tabular microsoft.json
 
-# Optionally, tell the app where to write the results JSON file to
+# Optionally, tell the app where to write the results JSON file to (this can be a relative path)
 sh ./run.sh tabular $(pwd)/data/tabular microsoft.json /custom-dir/results
 ```
 

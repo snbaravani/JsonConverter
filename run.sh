@@ -15,7 +15,7 @@ if [ -z "$INPUT_FILENAME" ]; then
 fi
 
 DOCKER_INPUT_DIR="/avarni/reports"
-DOCKER_VOLUME="${HOST_INPUT_DIR}:${DOCKER_INPUT_DIR}"
+DOCKER_INPUT_VOLUME="${HOST_INPUT_DIR}:${DOCKER_INPUT_DIR}"
 DOCKER_INPUT_FILE="${DOCKER_INPUT_DIR}/${INPUT_FILENAME}"
 
 echo "This will run the Docker image for the JSON transformer app as a container"
@@ -23,6 +23,7 @@ echo "Using the ${CONVERSION_MODE} conversion mode"
 
 echo "Running the container with the ${CONVERSION_MODE} app..."
 docker run \
-  -v "${DOCKER_VOLUME}" \
+  -v "${DOCKER_INPUT_VOLUME}" \
+  -v "$(pwd)/config:/usr/local/runme/config" \
   avarni-transformer:1.0 \
   $CONVERSION_MODE "${DOCKER_INPUT_FILE}"
