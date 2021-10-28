@@ -4,7 +4,8 @@ This is an experimental project build to test out different forms of JSON conver
 
 Currently, it contains the following applications:
 
-**converter** - Converts CSVs into JSON.
+**converter** - Converts CSVs into JSON. Documentation about this approach is here:
+[CSV_APPROACH.md](./CSV_APPROACH.md).
 
 **tabular** - Converts arrays of tables (defined as strings) into JSON. Documentation about this approach is here:
 [TABULAR_APPROACH.md](./TABULAR_APPROACH.md).
