@@ -14,21 +14,30 @@ public class TabularAppUtils {
 
     /**
      * Regex to extract the scope number from a string (constrained to known scope numbers: 1-3)
+     * E.g.: "Scope 2 - Location-based² 2,697,554 , " -> "2"
+     * E.g.: "Emissions from Purchased Electricity (Scope 2) 4.71 , " -> "2"
      */
-    private static final String scopeRegex = "scope\\s+([1-3]{1})";
+    private static final String scopeRegex = "\\(*scope\\s+([1-3]{1})\\)*";
     private static final Pattern scopePattern = Pattern.compile(scopeRegex, Pattern.CASE_INSENSITIVE);
 
     /**
      * Regex to extract the numeric value from a cell, reading from the end of the string
+     * E.g.: "Scope 11,2 107,452 " -> "107452"
      */
     private static final String cellValueRegex = "\\s+((\\d|\\.|,)+)\\s*$";
     private static final Pattern cellValuePattern = Pattern.compile(cellValueRegex);
 
     /**
-     * Regex to extract the human-readable content of a row label
+     * Regex to highlight the end of a string if it contains invalid special characters
+     * E.g.: " - Location-based²" -> " - Location-based"
      */
-    private static final String labelContentRegex = "^\\W*([\\w|\\s]+)\\b.*$";
-    private static final Pattern labelContentPattern = Pattern.compile(labelContentRegex);
+    private static final String labelSpecialTrailingRegex = "[^a-z()]+$";
+
+    /**
+     * Regex to highlight the start of a string if it contains invalid special characters
+     * E.g.: " - Location-based" -> "Location-based"
+     */
+    private static final String labelSpecialLeadingRegex = "^(\\W*)";
 
     /**
      * Given a 4 digit year or FY** format, returns a 4 digit year.
@@ -132,7 +141,7 @@ public class TabularAppUtils {
     }
 
     /**
-     * Returns the label of the cell content based on the leading string, minus trailing number.
+     * Returns a cleansed label of the cell content based on the leading string, minus trailing number.
      *
      * @param cell String cell content
      * @return Label from the start of the string or the whole string if no trailing number found
@@ -146,16 +155,34 @@ public class TabularAppUtils {
 
                 var config = TabularAppConfig.getAppConfig();
 
+                // Whether to remove "Scope X" from the label
                 if (config.getRemoveLabelScope()) {
-                    label = scopePattern.matcher(label).replaceFirst("");
+                    Matcher matcher = scopePattern.matcher(label);
+                    String cleanedLabel = matcher.replaceFirst("");
+
+                    // Is the label is too short after removing the "Scope X" text?
+                    if (cleanedLabel.length() <= 3) {
+                        // If too short, replace the label with just "Scope X"
+                        String scopeNumber = matcher.group(1);
+                        label = "Scope " + scopeNumber;
+                    } else {
+                        // Otherwise, continue with the cleaned label
+                        label = cleanedLabel;
+                    }
                 }
 
-                if (config.getCleanLabels()) {
-                    Matcher contentMatcher = labelContentPattern.matcher(label);
+                // If the label is now exactly "Scope X", no further processing can be done
+                if (scopePattern.matcher(label).matches()) {
+                    return label;
+                }
 
-                    if (contentMatcher.find()) {
-                        label = contentMatcher.group(1);
-                    }
+                // Do further cleansing of the label if required
+                if (config.getCleanLabels()) {
+                    // Remove any trailing special chars
+                    label = label.replaceFirst(labelSpecialTrailingRegex, "");
+
+                    // Remove any leading special chars
+                    label = label.replaceFirst(labelSpecialLeadingRegex, "");
                 }
 
                 return label;

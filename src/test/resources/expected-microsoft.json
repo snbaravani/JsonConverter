@@ -1,0 +1,104 @@
+{
+  "scope1": {
+    "2017": {
+      "Scope 1": 107452.0,
+      "total": 107452.0
+    },
+    "2018": {
+      "Scope 1": 99008.0,
+      "total": 99008.0
+    },
+    "2019": {
+      "Scope 1": 117956.0,
+      "total": 117956.0
+    },
+    "2020": {
+      "Scope 1": 118100.0,
+      "total": 118100.0
+    }
+  },
+  "scope2": {
+    "2017": {
+      "Location-based": 2697554.0,
+      "Market-based": 139066.0,
+      "total": 2836620.0
+    },
+    "2018": {
+      "Location-based": 2946043.0,
+      "Market-based": 183329.0,
+      "total": 3129372.0
+    },
+    "2019": {
+      "Location-based": 3557518.0,
+      "Market-based": 275420.0,
+      "total": 3832938.0
+    },
+    "2020": {
+      "Location-based": 4102445.0,
+      "Market-based": 228194.0,
+      "total": 4330639.0
+    }
+  },
+  "scope3": {
+    "2017": {
+      "Business travel": 419020.0,
+      "Capital goods": 1670000.0,
+      "Downstream leased assets": 700.0,
+      "Downstream transportation": 85000.0,
+      "Employee commuting": 343000.0,
+      "End-of-life of sold products": 31000.0,
+      "Fuel- and energy-related activities (Location-based)": 540000.0,
+      "Fuel- and energy-related activities (Market-based)": 89000.0,
+      "Purchased goods & services": 4090000.0,
+      "Upstream transportation": 50000.0,
+      "Use of sold products": 4103000.0,
+      "Waste": 700.0,
+      "total": 1.088142E+7
+    },
+    "2018": {
+      "Business travel": 461787.0,
+      "Capital goods": 2230000.0,
+      "Downstream leased assets": 1700.0,
+      "Downstream transportation": 98000.0,
+      "Employee commuting": 345000.0,
+      "End-of-life of sold products": 18000.0,
+      "Fuel- and energy-related activities (Location-based)": 550000.0,
+      "Fuel- and energy-related activities (Market-based)": 110000.0,
+      "Purchased goods & services": 4120000.0,
+      "Upstream transportation": 50000.0,
+      "Use of sold products": 4230000.0,
+      "Waste": 500.0,
+      "total": 11664987
+    },
+    "2019": {
+      "Business travel": 476457.0,
+      "Capital goods": 2180000.0,
+      "Downstream leased assets": 800.0,
+      "Downstream transportation": 57000.0,
+      "Employee commuting": 411000.0,
+      "End-of-life of sold products": 18000.0,
+      "Fuel- and energy-related activities (Location-based)": 650000.0,
+      "Fuel- and energy-related activities (Market-based)": 170000.0,
+      "Purchased goods & services": 4190000.0,
+      "Upstream transportation": 100000.0,
+      "Use of sold products": 3753000.0,
+      "Waste": 1100.0,
+      "total": 11357357
+    },
+    "2020": {
+      "Business travel": 329356.0,
+      "Capital goods": 2750000.0,
+      "Downstream leased assets": 4600.0,
+      "Downstream transportation": 44000.0,
+      "Employee commuting": 317000.0,
+      "End-of-life of sold products": 17000.0,
+      "Fuel- and energy-related activities (Location-based)": 770000.0,
+      "Fuel- and energy-related activities (Market-based)": 180000.0,
+      "Purchased goods & services": 4050000.0,
+      "Upstream transportation": 100000.0,
+      "Use of sold products": 3025000.0,
+      "Waste": 800.0,
+      "total": 10817756
+    }
+  }
+}

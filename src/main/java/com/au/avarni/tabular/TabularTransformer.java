@@ -6,10 +6,7 @@ import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class TabularTransformer {
@@ -112,7 +109,27 @@ public class TabularTransformer {
                 // Extract cell values by a ", " delimiter (not just comma, due to commas in numbers)
                 String[] cells = row.split(", ");
 
-                String rowLabelCell = cells[0];
+                String rowLabelCell;
+
+                // Sometimes a row label contains commas, causing the cell splitting logic to break the
+                // label into multiple cells, when it should remain a single cell.
+                // If the number of cells in the row exceeds the number of table headings, combine the
+                // first N cells up to the point where the number of cells matches the number of headings.
+                // Then take the first cell and treat that as the un-formatted label + first numeric cell value.
+                if (cells.length > columnNames.length) {
+                    // How many cells sit before the first value cell
+                    Integer offset = cells.length - columnNames.length;
+
+                    // Combine all leading cells into a single string to use as the label + first numeric value
+                    String[] leadingCells = Arrays.copyOfRange(cells, 0, offset);
+                    rowLabelCell = String.join(", ", leadingCells);
+
+                    // Replace main cells array with the set of cells after the leading ones
+                    cells = Arrays.copyOfRange(cells, offset - 1, cells.length);
+                } else {
+                    rowLabelCell = cells[0];
+                }
+
                 String rowLabel = TabularAppUtils.getRowLabel(rowLabelCell);
                 Integer rowScope = TabularAppUtils.getScopeNumber(rowLabelCell);
 
