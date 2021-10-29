@@ -6,6 +6,7 @@ import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -165,14 +166,14 @@ public class TabularTransformer {
                     }
 
                     if (year != null && numericValue != null) {
-                        scopesMap.get("scope" + currentScope).setYearValue(year, rowLabel, numericValue);
+                        scopesMap.get("scope" + currentScope).setYearValue(year, rowLabel, BigDecimal.valueOf(numericValue));
                     }
                 }
             }
         });
 
         // Convert the map of scope objects into a map of maps for JSON serialization
-        TreeMap<String, TreeMap<String, TreeMap<String, Double>>> jsonMap = new TreeMap<>();
+        var jsonMap = new TreeMap<>();
         scopesMap.forEach((scopeName, scopeObject) -> {
             scopeObject.removeRawTotalValues();
 

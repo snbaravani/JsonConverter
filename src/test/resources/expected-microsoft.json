@@ -53,7 +53,7 @@
       "Upstream transportation": 50000.0,
       "Use of sold products": 4103000.0,
       "Waste": 700.0,
-      "total": 1.088142E+7
+      "total": 11421420.0
     },
     "2018": {
       "Business travel": 461787.0,
@@ -68,7 +68,7 @@
       "Upstream transportation": 50000.0,
       "Use of sold products": 4230000.0,
       "Waste": 500.0,
-      "total": 11664987
+      "total": 12214987.0
     },
     "2019": {
       "Business travel": 476457.0,
@@ -83,7 +83,7 @@
       "Upstream transportation": 100000.0,
       "Use of sold products": 3753000.0,
       "Waste": 1100.0,
-      "total": 11357357
+      "total": 12007357.0
     },
     "2020": {
       "Business travel": 329356.0,
@@ -98,7 +98,7 @@
       "Upstream transportation": 100000.0,
       "Use of sold products": 3025000.0,
       "Waste": 800.0,
-      "total": 10817756
+      "total": 11587756.0
     }
   }
 }

@@ -12,8 +12,8 @@ public class YearObject {
     private final String year;
 
     // Map of values in this year, initialised with a zero total value
-    private final TreeMap<String, Double> values = new TreeMap<>() {{
-        put("total", 0d);
+    private final TreeMap<String, BigDecimal> values = new TreeMap<>() {{
+        put("total", BigDecimal.ZERO);
     }};
 
     /**
@@ -25,7 +25,7 @@ public class YearObject {
         this.year = year;
     }
 
-    public TreeMap<String, Double> getValues() {
+    public TreeMap<String, BigDecimal> getValues() {
         return values;
     }
 
@@ -35,7 +35,7 @@ public class YearObject {
      * @param name  Name/key of the value
      * @param value Numeric value to set
      */
-    public void setValue(String name, Double value) {
+    public void setValue(String name, BigDecimal value) {
         values.put(name, value);
 
         updateTotal();
@@ -59,9 +59,9 @@ public class YearObject {
                 // Loop within a loop here is to compare each value against the total of
                 // all other values in the map to determine if the value is actually a total
                 // of the rest. This can then be removed, as `total` is calculated dynamically.
-                for (Map.Entry<String, Double> entry : values.entrySet()) {
+                for (Map.Entry<String, BigDecimal> entry : values.entrySet()) {
                     String key = entry.getKey();
-                    Double value = entry.getValue();
+                    BigDecimal value = entry.getValue();
 
                     // Ignore the dynamic `total` field
                     if (key.equals("total")) {
@@ -70,9 +70,9 @@ public class YearObject {
 
                     BigDecimal otherFieldsTotal = BigDecimal.ZERO;
 
-                    for (Map.Entry<String, Double> otherEntry : values.entrySet()) {
+                    for (Map.Entry<String, BigDecimal> otherEntry : values.entrySet()) {
                         String otherKey = otherEntry.getKey();
-                        Double otherValue = otherEntry.getValue();
+                        BigDecimal otherValue = otherEntry.getValue();
 
                         // Ignore the dynamic `total` field,
                         // or if this is the same key we're checking in the parent loop
@@ -80,10 +80,10 @@ public class YearObject {
                             continue;
                         }
 
-                        otherFieldsTotal = otherFieldsTotal.add(BigDecimal.valueOf(otherValue));
+                        otherFieldsTotal = otherFieldsTotal.add(otherValue);
                     }
 
-                    if (otherFieldsTotal.equals(BigDecimal.valueOf(value))) {
+                    if (otherFieldsTotal.equals(value)) {
                         keyToRemove = key;
                     }
                 }
@@ -106,17 +106,17 @@ public class YearObject {
     private void updateTotal() {
         BigDecimal newTotal = BigDecimal.ZERO;
 
-        for (Map.Entry<String, Double> entry : values.entrySet()) {
+        for (Map.Entry<String, BigDecimal> entry : values.entrySet()) {
             String key = entry.getKey();
-            Double value = entry.getValue();
+            BigDecimal value = entry.getValue();
 
             if (key.equals("total")) {
                 continue;
             }
 
-            newTotal = newTotal.add(BigDecimal.valueOf(value));
+            newTotal = newTotal.add(value);
         }
 
-        values.put("total", newTotal.doubleValue());
+        values.put("total", newTotal);
     }
 }

@@ -1,5 +1,6 @@
 package com.au.avarni.tabular.objects;
 
+import java.math.BigDecimal;
 import java.util.TreeMap;
 
 public class ScopeObject {
@@ -24,8 +25,8 @@ public class ScopeObject {
      *
      * @return Map of year value maps
      */
-    public TreeMap<String, TreeMap<String, Double>> getYearsMap() {
-        TreeMap<String, TreeMap<String, Double>> yearsMap = new TreeMap<>();
+    public TreeMap<String, TreeMap<String, BigDecimal>> getYearsMap() {
+        TreeMap<String, TreeMap<String, BigDecimal>> yearsMap = new TreeMap<>();
 
         yearValues.forEach((year, values) -> yearsMap.put(year, values.getValues()));
 
@@ -39,7 +40,7 @@ public class ScopeObject {
      * @param name  Name/key of the value being set
      * @param value Numeric value to set
      */
-    public void setYearValue(String year, String name, Double value) {
+    public void setYearValue(String year, String name, BigDecimal value) {
         if (!yearValues.containsKey(year)) {
             // Create the year object if it doesn't exist already
             yearValues.put(year, new YearObject(year));
